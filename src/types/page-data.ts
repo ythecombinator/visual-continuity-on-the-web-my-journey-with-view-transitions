@@ -1,16 +1,5 @@
-import type { Category, Product } from "@/data/products";
+import type { SurveyStep } from "@/data/survey";
 
-export type HomePageData = {
-  products: Product[];
-};
-
-export type ProductDetailPageData = {
-  product: Product;
-  backHref: string;
-};
-
-export type CategoryPageData = {
-  products: Product[];
-  category: Category;
-  categoryLabel: string;
+export type StepPageData = {
+  step: SurveyStep;
 };
