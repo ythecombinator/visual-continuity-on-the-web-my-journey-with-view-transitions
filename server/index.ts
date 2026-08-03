@@ -1,4 +1,3 @@
-import cookie from "@fastify/cookie";
 import middie from "@fastify/middie";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
@@ -6,7 +5,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer as createViteServer, type ViteDevServer } from "vite";
-import { registerApiRoutes } from "./routes/api.js";
 import { registerPageRoutes } from "./routes/pages.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -75,13 +73,12 @@ function buildProductionScriptTags(
 
 async function createApp(vite?: ViteDevServer) {
   const app = Fastify({ logger: isDev });
-  await app.register(cookie);
 
   const cssHrefs = isDev
-    ? ["/src/styles/global.css", "/src/styles/view-transitions.css"]
+    ? ["/src/styles/global.css"]
     : collectCssFromManifest(
         loadManifest(),
-        manifestEntryForClientEntry(loadManifest(), "home"),
+        manifestEntryForClientEntry(loadManifest(), "welcome"),
       );
 
   const getClientScripts = isDev
@@ -92,7 +89,6 @@ async function createApp(vite?: ViteDevServer) {
     : (entry: string, pageData?: Record<string, unknown>) =>
         buildProductionScriptTags(entry, pageData);
 
-  await registerApiRoutes(app);
   await registerPageRoutes(app, {
     dev: isDev,
     cssHrefs,
@@ -125,7 +121,7 @@ async function main() {
 
   const app = await createApp(vite);
   await app.listen({ port: PORT, host: "0.0.0.0" });
-  console.log(`Visual Continuity MPA Demo running at http://localhost:${PORT}`);
+  console.log(`Session Pulse MPA Demo running at http://localhost:${PORT}`);
 }
 
 main().catch((error) => {

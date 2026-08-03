@@ -15,9 +15,9 @@ export default defineConfig({
     manifest: true,
     rollupOptions: {
       input: {
-        home: resolve(__dirname, "src/client/home.tsx"),
-        "product-detail": resolve(__dirname, "src/client/product-detail.tsx"),
-        category: resolve(__dirname, "src/client/category.tsx"),
+        welcome: resolve(__dirname, "src/client/welcome.tsx"),
+        step: resolve(__dirname, "src/client/step.tsx"),
+        done: resolve(__dirname, "src/client/done.tsx"),
       },
     },
   },

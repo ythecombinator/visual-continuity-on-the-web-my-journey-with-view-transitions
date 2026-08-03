@@ -1,46 +1,40 @@
 import type { ReactNode } from "react";
-import type { Category } from "@/data/products";
-import { categories } from "@/data/products";
+import { SurveyProgress } from "@/components/SurveyProgress";
 
 interface LayoutProps {
   children: ReactNode;
-  currentPath: string;
   pageTitle: string;
+  phase: "welcome" | "step" | "done";
+  stepIndex?: number;
+  navSlot: ReactNode;
 }
 
-export function Layout({ children, currentPath, pageTitle }: LayoutProps) {
-  const activeCategory = currentPath.startsWith("/categories/")
-    ? (currentPath.split("/")[2] as Category)
-    : null;
-
+export function Layout({
+  children,
+  pageTitle,
+  phase,
+  stepIndex = -1,
+  navSlot,
+}: LayoutProps) {
   return (
-    <div className="app-shell">
-      <header className="site-header" style={{ viewTransitionName: "site-header" }}>
-        <div className="site-header__inner">
-          <a href="/" className="site-brand">
-            <p className="site-brand__title">Legacy Catalog</p>
-            <p className="site-brand__subtitle">Visual Continuity MPA Demo</p>
-          </a>
-          <nav className="site-nav" style={{ viewTransitionName: "site-nav" }} aria-label="Categories">
-            <a href="/" aria-current={currentPath === "/" ? "page" : undefined}>
-              All products
-            </a>
-            {categories.map((category) => (
-              <a
-                key={category.slug}
-                href={`/categories/${category.slug}`}
-                aria-current={activeCategory === category.slug ? "page" : undefined}
-              >
-                {category.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
-      <main className="page-container" id="main-content">
+    <div className="flex flex-1 flex-col">
+      <div className="sticky top-0 z-40">
+        <SurveyProgress currentIndex={stepIndex} phase={phase} />
+      </div>
+
+      <main
+        className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 pb-28 sm:px-6 sm:py-10"
+        id="main-content"
+      >
         <h1 className="sr-only">{pageTitle}</h1>
         {children}
       </main>
+
+      <footer className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/85 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-3xl px-4 py-3 sm:px-6">
+          {navSlot}
+        </div>
+      </footer>
     </div>
   );
 }
