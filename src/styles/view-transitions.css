@@ -1,0 +1,114 @@
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.force-reduced-motion):not(.disable-cross-document-vt) {
+    @view-transition {
+      navigation: auto;
+    }
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:active-view-transition-type(forward) ::view-transition-old(root),
+html.vt-forward ::view-transition-old(root) {
+  animation-name: vt-slide-out-left;
+}
+
+html:active-view-transition-type(forward) ::view-transition-new(root),
+html.vt-forward ::view-transition-new(root) {
+  animation-name: vt-slide-in-right;
+}
+
+html:active-view-transition-type(back) ::view-transition-old(root),
+html.vt-back ::view-transition-old(root) {
+  animation-name: vt-slide-out-right;
+}
+
+html:active-view-transition-type(back) ::view-transition-new(root),
+html.vt-back ::view-transition-new(root) {
+  animation-name: vt-slide-in-left;
+}
+
+html:active-view-transition-type(reload) ::view-transition-old(root),
+html:active-view-transition-type(reload) ::view-transition-new(root),
+html.vt-reload ::view-transition-old(root),
+html.vt-reload ::view-transition-new(root) {
+  animation-name: vt-cross-fade;
+}
+
+@keyframes vt-cross-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vt-slide-out-left {
+  to {
+    transform: translateX(-12%);
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-in-right {
+  from {
+    transform: translateX(12%);
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-out-right {
+  to {
+    transform: translateX(12%);
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-in-left {
+  from {
+    transform: translateX(-12%);
+    opacity: 0;
+  }
+}
+
+::view-transition-group(site-header),
+::view-transition-group(site-nav) {
+  animation-duration: 0.35s;
+}
+
+::view-transition-old(site-header),
+::view-transition-new(site-header),
+::view-transition-old(site-nav),
+::view-transition-new(site-nav) {
+  animation: none;
+}
+
+::view-transition-group(*):not(root):not(site-header):not(site-nav) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+html.force-reduced-motion ::view-transition-group(*),
+html.force-reduced-motion ::view-transition-old(*),
+html.force-reduced-motion ::view-transition-new(*) {
+  animation: none !important;
+}
+
+html.disable-cross-document-vt ::view-transition-group(*),
+html.disable-cross-document-vt ::view-transition-old(*),
+html.disable-cross-document-vt ::view-transition-new(*) {
+  animation: none !important;
+}
