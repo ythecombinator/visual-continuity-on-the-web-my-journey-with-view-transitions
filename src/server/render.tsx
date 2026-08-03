@@ -38,6 +38,17 @@ const NAVIGATION_TYPE_SCRIPT = `
 })();
 `.trim();
 
+/** Required before any React modules load when using a custom Vite SSR HTML shell. */
+const REACT_REFRESH_PREAMBLE = `
+<script type="module">
+import RefreshRuntime from "/@react-refresh";
+RefreshRuntime.injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;
+window.__vite_plugin_react_preamble_installed__ = true;
+</script>
+`.trim();
+
 export function renderPage({
   title,
   component: Page,
@@ -69,6 +80,7 @@ export function renderPage({
     <style>${VIEW_TRANSITIONS_CSS}</style>
     ${cssLinks}
     <script>${NAVIGATION_TYPE_SCRIPT}</script>
+    ${dev ? REACT_REFRESH_PREAMBLE : ""}
   </head>
   <body>
     <div id="root">${appHtml}</div>
