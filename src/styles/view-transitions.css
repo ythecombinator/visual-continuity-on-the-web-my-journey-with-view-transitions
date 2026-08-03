@@ -1,8 +1,13 @@
-@media (prefers-reduced-motion: no-preference) {
-  html:not(.force-reduced-motion):not(.disable-cross-document-vt) {
-    @view-transition {
-      navigation: auto;
-    }
+/* Source of truth — also inlined into the HTML shell via render.tsx
+   so Tailwind never rewrites the @view-transition at-rule. */
+
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
   }
 }
 
@@ -12,28 +17,22 @@
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html:active-view-transition-type(forward) ::view-transition-old(root),
 html.vt-forward ::view-transition-old(root) {
   animation-name: vt-slide-out-left;
 }
 
-html:active-view-transition-type(forward) ::view-transition-new(root),
 html.vt-forward ::view-transition-new(root) {
   animation-name: vt-slide-in-right;
 }
 
-html:active-view-transition-type(back) ::view-transition-old(root),
 html.vt-back ::view-transition-old(root) {
   animation-name: vt-slide-out-right;
 }
 
-html:active-view-transition-type(back) ::view-transition-new(root),
 html.vt-back ::view-transition-new(root) {
   animation-name: vt-slide-in-left;
 }
 
-html:active-view-transition-type(reload) ::view-transition-old(root),
-html:active-view-transition-type(reload) ::view-transition-new(root),
 html.vt-reload ::view-transition-old(root),
 html.vt-reload ::view-transition-new(root) {
   animation-name: vt-cross-fade;
@@ -50,45 +49,57 @@ html.vt-reload ::view-transition-new(root) {
 
 @keyframes vt-slide-out-left {
   to {
-    transform: translateX(-12%);
+    transform: translateX(-10%);
     opacity: 0;
   }
 }
 
 @keyframes vt-slide-in-right {
   from {
-    transform: translateX(12%);
+    transform: translateX(10%);
     opacity: 0;
   }
 }
 
 @keyframes vt-slide-out-right {
   to {
-    transform: translateX(12%);
+    transform: translateX(10%);
     opacity: 0;
   }
 }
 
 @keyframes vt-slide-in-left {
   from {
-    transform: translateX(-12%);
+    transform: translateX(-10%);
     opacity: 0;
   }
 }
 
-::view-transition-group(site-header),
-::view-transition-group(site-nav) {
+::view-transition-group(survey-progress),
+::view-transition-group(survey-nav) {
   animation-duration: 0.35s;
 }
 
-::view-transition-old(site-header),
-::view-transition-new(site-header),
-::view-transition-old(site-nav),
-::view-transition-new(site-nav) {
+::view-transition-old(survey-progress),
+::view-transition-new(survey-progress),
+::view-transition-old(survey-nav),
+::view-transition-new(survey-nav) {
   animation: none;
 }
 
-::view-transition-group(*):not(root):not(site-header):not(site-nav) {
+::view-transition-group(survey-progress-fill) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(survey-progress-fill),
+::view-transition-new(survey-progress-fill) {
+  height: 100%;
+  border-radius: 999px;
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(*):not(root):not(survey-progress):not(survey-nav):not(survey-progress-fill) {
   animation-duration: 0.45s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -99,16 +110,4 @@ html.vt-reload ::view-transition-new(root) {
   ::view-transition-new(*) {
     animation: none !important;
   }
-}
-
-html.force-reduced-motion ::view-transition-group(*),
-html.force-reduced-motion ::view-transition-old(*),
-html.force-reduced-motion ::view-transition-new(*) {
-  animation: none !important;
-}
-
-html.disable-cross-document-vt ::view-transition-group(*),
-html.disable-cross-document-vt ::view-transition-old(*),
-html.disable-cross-document-vt ::view-transition-new(*) {
-  animation: none !important;
 }
