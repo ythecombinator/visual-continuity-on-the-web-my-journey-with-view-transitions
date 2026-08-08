@@ -178,10 +178,6 @@ export function getAdjacentSteps(slug: string): {
   return { prevHref, nextHref, isLast, index };
 }
 
-export function stepTransitionName(part: "title" | "progress" | "hero"): string {
-  return `survey-${part}`;
-}
-
 export function questionTransitionName(questionId: string): string {
   return `question-${questionId}`;
 }

@@ -10,8 +10,7 @@ export function SurveyProgress({ currentIndex, phase }: SurveyProgressProps) {
 
   return (
     <div
-      className="h-1.5 w-full bg-secondary"
-      style={{ viewTransitionName: "survey-progress" }}
+      className="vt-survey-progress h-1.5 w-full bg-secondary"
       role="progressbar"
       aria-valuemin={0}
       aria-valuemax={100}
@@ -19,11 +18,8 @@ export function SurveyProgress({ currentIndex, phase }: SurveyProgressProps) {
       aria-label={`${percent}% complete`}
     >
       <div
-        className="h-full bg-primary"
-        style={{
-          width: `${percent}%`,
-          viewTransitionName: "survey-progress-fill",
-        }}
+        className="vt-survey-progress-fill h-full bg-primary"
+        style={{ width: `${percent}%` }}
       />
     </div>
   );

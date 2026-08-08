@@ -1,11 +1,8 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
-import { LiveRegion } from "@/components/LiveRegion";
 import { SurveyNav } from "@/components/SurveyNav";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { stepTransitionName, surveySteps } from "@/data/survey";
+import { surveySteps } from "@/data/survey";
 import { cn } from "@/lib/utils";
 import {
   collectAnsweredQuestions,
@@ -21,7 +18,7 @@ import { runViewTransition } from "@/shared/view-transition";
 
 const FORM_ID = "survey-done-form";
 
-export function DonePageClient() {
+export function DonePage() {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const [submitted, setSubmitted] = useState(false);
   const [revealed, setRevealed] = useState(true);
@@ -38,6 +35,8 @@ export function DonePageClient() {
     }
   }, []);
 
+  const lastStepHref = `/steps/${lastStep.slug}`;
+
   return (
     <form
       id={FORM_ID}
@@ -48,7 +47,7 @@ export function DonePageClient() {
 
         const submitter = (event.nativeEvent as SubmitEvent)
           .submitter as HTMLButtonElement | null;
-        const intent = submitter?.value ?? "back";
+        const intent = submitter?.value ?? "restart";
 
         if (intent === "restart") {
           const cleared = clearSurveyState();
@@ -57,10 +56,7 @@ export function DonePageClient() {
             return;
           }
           navigateAfterPersist("/");
-          return;
         }
-
-        navigateAfterPersist(`/steps/${lastStep.slug}`);
       }}
     >
       <Layout
@@ -72,7 +68,7 @@ export function DonePageClient() {
             formId={FORM_ID}
             showBack
             backLabel="Back"
-            backIntent="back"
+            backHref={lastStepHref}
             showForward
             forwardLabel="Start over"
             forwardIntent="restart"
@@ -87,8 +83,7 @@ export function DonePageClient() {
             <h1
               id="page-heading"
               tabIndex={-1}
-              className="max-w-xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl sm:leading-[1.1]"
-              style={{ viewTransitionName: stepTransitionName("title") }}
+              className="vt-survey-title max-w-xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl sm:leading-[1.1]"
             >
               Thanks for the signal
             </h1>
@@ -98,15 +93,12 @@ export function DonePageClient() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <button
-              type="submit"
-              form={FORM_ID}
-              name="intent"
-              value="back"
+            <a
+              href={lastStepHref}
               className={cn(buttonVariants({ variant: "secondary" }))}
             >
               Back to last step
-            </button>
+            </a>
             <button
               type="submit"
               form={FORM_ID}
@@ -164,8 +156,6 @@ export function DonePageClient() {
             )}
           </section>
         ) : null}
-
-        <LiveRegion message="Survey finished." focusTargetId="page-heading" />
       </Layout>
     </form>
   );

@@ -1,32 +1,22 @@
-"use client";
-
-import { LiveRegion } from "@/components/LiveRegion";
 import { Layout } from "@/components/Layout";
 import { SurveyNav } from "@/components/SurveyNav";
-import { surveyMeta, stepTransitionName, surveySteps } from "@/data/survey";
+import { surveyMeta, surveySteps } from "@/data/survey";
 
-const FORM_ID = "survey-welcome-form";
 const START_HREF = `/steps/${surveySteps[0].slug}`;
 
-export function WelcomePageClient() {
+export function WelcomePage() {
   return (
-    <form
-      id={FORM_ID}
-      className="flex min-h-screen flex-col"
-      action={START_HREF}
-      method="get"
-    >
+    <div className="flex min-h-screen flex-col">
       <Layout
         pageTitle="Session Pulse · Welcome"
         phase="welcome"
         navSlot={
           <SurveyNav
-            formId={FORM_ID}
             showBack
             backDisabled
             showForward
             forwardLabel="Start"
-            forwardIntent="start"
+            forwardHref={START_HREF}
           />
         }
       >
@@ -35,8 +25,7 @@ export function WelcomePageClient() {
           <h1
             id="page-heading"
             tabIndex={-1}
-            className="max-w-xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl sm:leading-[1.1]"
-            style={{ viewTransitionName: stepTransitionName("title") }}
+            className="vt-survey-title max-w-xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl sm:leading-[1.1]"
           >
             How was the talk?
           </h1>
@@ -45,9 +34,7 @@ export function WelcomePageClient() {
             <span className="font-medium text-foreground">{surveyMeta.talkTitle}</span>.
           </p>
         </section>
-
-        <LiveRegion message="Survey welcome loaded." focusTargetId="page-heading" />
       </Layout>
-    </form>
+    </div>
   );
 }

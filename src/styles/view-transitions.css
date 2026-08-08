@@ -1,41 +1,145 @@
 /* Source of truth — also inlined into the HTML shell via render.tsx
    so Tailwind never rewrites the @view-transition at-rule. */
 
+/* Keep the opt-in even under reduced motion so pagereveal still sees a
+   ViewTransition object; motion itself is zeroed below. */
 @view-transition {
   navigation: auto;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: none;
+/* Clicks pass through the snapshot overlay while a transition runs. */
+::view-transition {
+  pointer-events: none;
+}
+
+/* Named chrome + title hooks (applied via class on both documents). */
+.vt-survey-progress {
+  view-transition-name: survey-progress;
+  view-transition-class: survey-chrome;
+}
+
+.vt-survey-progress-fill {
+  view-transition-name: survey-progress-fill;
+  view-transition-class: survey-progress-fill;
+}
+
+.vt-survey-nav {
+  view-transition-name: survey-nav;
+  view-transition-class: survey-chrome;
+}
+
+.vt-survey-title {
+  view-transition-name: survey-title;
+  view-transition-class: survey-title;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Shared chrome: morph geometry, don't cross-fade bitmaps. */
+  ::view-transition-group(*.survey-chrome) {
+    animation-duration: 0.35s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-old(*.survey-chrome),
+  ::view-transition-new(*.survey-chrome) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* Progress fill is the signature shared-element motion. */
+  ::view-transition-group(*.survey-progress-fill) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+  }
+
+  ::view-transition-old(*.survey-progress-fill),
+  ::view-transition-new(*.survey-progress-fill) {
+    height: 100%;
+    border-radius: 999px;
+    object-fit: cover;
+    overflow: hidden;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-group(*.survey-title) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-old(*.survey-title),
+  ::view-transition-new(*.survey-title) {
+    object-fit: cover;
+    overflow: hidden;
+    mix-blend-mode: normal;
+  }
+
+  /* Default root timing; recipes below override animation-name by type. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Forward steps — wipe / soft slide from the right. */
+  html:active-view-transition-type(forwards)::view-transition-old(root) {
+    animation-name: vt-wipe-out-left;
+  }
+
+  html:active-view-transition-type(forwards)::view-transition-new(root) {
+    animation-name: vt-wipe-in-right;
+  }
+
+  /* Back steps — mirrored wipe. */
+  html:active-view-transition-type(backwards)::view-transition-old(root) {
+    animation-name: vt-wipe-out-right;
+  }
+
+  html:active-view-transition-type(backwards)::view-transition-new(root) {
+    animation-name: vt-wipe-in-left;
+  }
+
+  /* Finish ceremony — circle reveal into /done. */
+  html:active-view-transition-type(finish)::view-transition-old(root) {
+    animation-name: vt-circle-out;
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html:active-view-transition-type(finish)::view-transition-new(root) {
+    animation-name: vt-circle-in;
+    animation-duration: 0.55s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Reload — quiet cross-fade. */
+  html:active-view-transition-type(reload)::view-transition-old(root),
+  html:active-view-transition-type(reload)::view-transition-new(root) {
+    animation-name: vt-cross-fade;
+    animation-duration: 0.25s;
+  }
+
+  /* Named question cards / other shared bits. */
+  ::view-transition-group(*):not(root) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    object-fit: cover;
+    overflow: hidden;
   }
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.35s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-html.vt-forward ::view-transition-old(root) {
-  animation-name: vt-slide-out-left;
-}
-
-html.vt-forward ::view-transition-new(root) {
-  animation-name: vt-slide-in-right;
-}
-
-html.vt-back ::view-transition-old(root) {
-  animation-name: vt-slide-out-right;
-}
-
-html.vt-back ::view-transition-new(root) {
-  animation-name: vt-slide-in-left;
-}
-
-html.vt-reload ::view-transition-old(root),
-html.vt-reload ::view-transition-new(root) {
-  animation-name: vt-cross-fade;
+/* Instant cut when the user prefers reduced motion (opt-in stays on). */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+    animation-duration: 0s !important;
+  }
 }
 
 @keyframes vt-cross-fade {
@@ -47,67 +151,68 @@ html.vt-reload ::view-transition-new(root) {
   }
 }
 
-@keyframes vt-slide-out-left {
-  to {
-    transform: translateX(-10%);
-    opacity: 0;
-  }
-}
-
-@keyframes vt-slide-in-right {
+@keyframes vt-wipe-out-left {
   from {
-    transform: translateX(10%);
-    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
-}
-
-@keyframes vt-slide-out-right {
   to {
-    transform: translateX(10%);
-    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.96;
   }
 }
 
-@keyframes vt-slide-in-left {
+@keyframes vt-wipe-in-right {
   from {
-    transform: translateX(-10%);
-    opacity: 0;
+    clip-path: inset(0 0 0 100%);
+    opacity: 0.96;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
 }
 
-::view-transition-group(survey-progress),
-::view-transition-group(survey-nav) {
-  animation-duration: 0.35s;
+@keyframes vt-wipe-out-right {
+  from {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(0 0 0 100%);
+    opacity: 0.96;
+  }
 }
 
-::view-transition-old(survey-progress),
-::view-transition-new(survey-progress),
-::view-transition-old(survey-nav),
-::view-transition-new(survey-nav) {
-  animation: none;
+@keyframes vt-wipe-in-left {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.96;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
 }
 
-::view-transition-group(survey-progress-fill) {
-  animation-duration: 0.45s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+@keyframes vt-circle-out {
+  from {
+    clip-path: circle(150% at 50% 50%);
+    opacity: 1;
+  }
+  to {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0.85;
+  }
 }
 
-::view-transition-old(survey-progress-fill),
-::view-transition-new(survey-progress-fill) {
-  height: 100%;
-  border-radius: 999px;
-  mix-blend-mode: normal;
-}
-
-::view-transition-group(*):not(root):not(survey-progress):not(survey-nav):not(survey-progress-fill) {
-  animation-duration: 0.45s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
+@keyframes vt-circle-in {
+  from {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0.85;
+  }
+  to {
+    clip-path: circle(150% at 50% 50%);
+    opacity: 1;
   }
 }

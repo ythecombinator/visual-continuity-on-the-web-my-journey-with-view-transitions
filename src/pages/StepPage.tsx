@@ -1,15 +1,11 @@
-"use client";
-
 import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "@tanstack/react-form";
 import { Layout } from "@/components/Layout";
-import { LiveRegion } from "@/components/LiveRegion";
 import { QuestionRenderer } from "@/components/QuestionRenderer";
 import { SurveyNav, type SurveyNavIntent } from "@/components/SurveyNav";
 import {
   getAdjacentSteps,
   questionTransitionName,
-  stepTransitionName,
   type SurveyStep,
 } from "@/data/survey";
 import { fieldErrorMessage } from "@/shared/form-errors";
@@ -26,11 +22,11 @@ import { runViewTransition } from "@/shared/view-transition";
 
 const FORM_ID = "survey-step-form";
 
-interface StepPageClientProps {
+interface StepPageProps {
   step: SurveyStep;
 }
 
-export function StepPageClient({ step }: StepPageClientProps) {
+export function StepPage({ step }: StepPageProps) {
   const intentRef = useRef<SurveyNavIntent>("next");
   const pendingValuesRef = useRef<StepFormValues | null>(null);
   const { prevHref, nextHref, isLast, index } = getAdjacentSteps(step.slug);
@@ -82,6 +78,8 @@ export function StepPageClient({ step }: StepPageClientProps) {
     <form
       id={FORM_ID}
       className="flex min-h-screen flex-col"
+      action={nextHref ?? "/done"}
+      method="get"
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -132,8 +130,7 @@ export function StepPageClient({ step }: StepPageClientProps) {
           <h1
             id="page-heading"
             tabIndex={-1}
-            className="max-w-2xl text-3xl font-semibold tracking-tight text-foreground sm:text-[2rem] sm:leading-tight"
-            style={{ viewTransitionName: stepTransitionName("title") }}
+            className="vt-survey-title max-w-2xl text-3xl font-semibold tracking-tight text-foreground sm:text-[2rem] sm:leading-tight"
           >
             {step.title}
           </h1>
@@ -167,11 +164,6 @@ export function StepPageClient({ step }: StepPageClientProps) {
             />
           ))}
         </div>
-
-        <LiveRegion
-          message={`${step.title} survey step loaded.`}
-          focusTargetId="page-heading"
-        />
       </Layout>
     </form>
   );

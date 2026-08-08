@@ -5,6 +5,7 @@ import {
   SURVEY_STORAGE_KEY,
   parseSurveyState,
 } from "@/shared/survey-answers";
+import { navigateForViewTransition } from "@/shared/view-transition";
 
 export type PersistResult =
   | { ok: true; state: SurveyState }
@@ -100,5 +101,6 @@ export function loadStepValues(step: SurveyStep): Record<string, AnswerValue> {
 }
 
 export function navigateAfterPersist(href: string): void {
-  window.location.assign(href);
+  // Must stay synchronous inside the user gesture so cross-document VT fires.
+  navigateForViewTransition(href);
 }
