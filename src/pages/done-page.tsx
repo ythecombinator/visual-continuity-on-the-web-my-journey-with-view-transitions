@@ -75,7 +75,7 @@ export function DonePage() {
       >
         <section className="space-y-5 py-4">
           <div className="space-y-3">
-            <p className="text-sm font-medium text-primary">
+            <p className="vt-survey-brand text-sm font-medium text-primary">
               {submitted ? "Submitted" : "Almost there"}
             </p>
             <h1

@@ -12,7 +12,7 @@
   pointer-events: none;
 }
 
-/* Named chrome + title hooks (applied via class on both documents). */
+/* Named chrome hooks (applied via class on both documents). */
 .vt-survey-progress {
   view-transition-name: survey-progress;
   view-transition-class: survey-chrome;
@@ -33,106 +33,154 @@
   view-transition-class: survey-title;
 }
 
+.vt-survey-brand {
+  view-transition-name: survey-brand;
+  view-transition-class: survey-brand;
+}
+
+.vt-survey-question {
+  view-transition-class: survey-question;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  /* Shared chrome: morph geometry, don't cross-fade bitmaps. */
+  /* Layering: chrome and progress stay above the root page motion. */
   ::view-transition-group(*.survey-chrome) {
-    animation-duration: 0.35s;
+    animation-duration: 0.4s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 20;
   }
 
+  /* Morph geometry only; keep snapshots fully opaque (no cross-fade flicker). */
   ::view-transition-old(*.survey-chrome),
   ::view-transition-new(*.survey-chrome) {
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+    overflow: clip;
     animation: none;
     mix-blend-mode: normal;
   }
 
-  /* Progress fill is the signature shared-element motion. */
+  /* Progress fill: the signature shared-element morph. */
   ::view-transition-group(*.survey-progress-fill) {
-    animation-duration: 0.45s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    z-index: 1;
+    animation-duration: 0.55s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 30;
+  }
+
+  ::view-transition-image-pair(*.survey-progress-fill) {
+    isolation: isolate;
   }
 
   ::view-transition-old(*.survey-progress-fill),
   ::view-transition-new(*.survey-progress-fill) {
     height: 100%;
     border-radius: 999px;
-    object-fit: cover;
-    overflow: hidden;
+    object-fit: fill;
+    overflow: clip;
     mix-blend-mode: normal;
+    animation: none;
   }
 
+  /* Title: group morphs box; bitmaps soft-crossfade so changing copy stays clean. */
   ::view-transition-group(*.survey-title) {
-    animation-duration: 0.4s;
+    animation-duration: 0.48s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 15;
   }
 
-  ::view-transition-old(*.survey-title),
+  ::view-transition-old(*.survey-title) {
+    object-fit: cover;
+    overflow: clip;
+    mix-blend-mode: plus-lighter;
+    animation: vt-fade-out 0.22s ease both;
+  }
+
   ::view-transition-new(*.survey-title) {
     object-fit: cover;
-    overflow: hidden;
-    mix-blend-mode: normal;
+    overflow: clip;
+    mix-blend-mode: plus-lighter;
+    animation: vt-fade-in 0.32s ease 0.08s both;
   }
 
-  /* Default root timing; recipes below override animation-name by type. */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
+  ::view-transition-group(*.survey-brand) {
     animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 14;
+  }
+
+  ::view-transition-old(*.survey-brand),
+  ::view-transition-new(*.survey-brand) {
+    object-fit: cover;
+    overflow: clip;
+    mix-blend-mode: plus-lighter;
+    animation: none;
+  }
+
+  /* Question cards: short enter/exit so they don't fight the root motion. */
+  ::view-transition-group(*.survey-question) {
+    animation-duration: 0.28s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Forward steps: wipe / soft slide from the right. */
+  ::view-transition-old(*.survey-question) {
+    object-fit: cover;
+    overflow: clip;
+    animation: vt-card-out 0.22s ease both;
+  }
+
+  ::view-transition-new(*.survey-question) {
+    object-fit: cover;
+    overflow: clip;
+    animation: vt-card-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+  }
+
+  /* Root page motion (typed). Shared names stay above this. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.42s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   html:active-view-transition-type(forwards)::view-transition-old(root) {
-    animation-name: vt-wipe-out-left;
+    animation-name: vt-slide-out-left;
   }
 
   html:active-view-transition-type(forwards)::view-transition-new(root) {
-    animation-name: vt-wipe-in-right;
+    animation-name: vt-slide-in-right;
   }
 
-  /* Back steps: mirrored wipe. */
   html:active-view-transition-type(backwards)::view-transition-old(root) {
-    animation-name: vt-wipe-out-right;
+    animation-name: vt-slide-out-right;
   }
 
   html:active-view-transition-type(backwards)::view-transition-new(root) {
-    animation-name: vt-wipe-in-left;
+    animation-name: vt-slide-in-left;
   }
 
-  /* Finish ceremony: circle reveal into /done. */
   html:active-view-transition-type(finish)::view-transition-old(root) {
-    animation-name: vt-circle-out;
-    animation-duration: 0.45s;
+    animation-name: vt-finish-out;
+    animation-duration: 0.4s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   html:active-view-transition-type(finish)::view-transition-new(root) {
-    animation-name: vt-circle-in;
+    animation-name: vt-finish-in;
     animation-duration: 0.55s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Reload: quiet cross-fade. */
-  html:active-view-transition-type(reload)::view-transition-old(root),
+  html:active-view-transition-type(reload)::view-transition-old(root) {
+    animation-name: vt-fade-out;
+    animation-duration: 0.2s;
+  }
+
   html:active-view-transition-type(reload)::view-transition-new(root) {
-    animation-name: vt-cross-fade;
+    animation-name: vt-fade-in;
     animation-duration: 0.25s;
-  }
-
-  /* Named question cards / other shared bits. */
-  ::view-transition-group(*):not(root) {
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    object-fit: cover;
-    overflow: hidden;
   }
 }
 
-/* Instant cut when the user prefers reduced motion (opt-in stays on). */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
@@ -142,77 +190,82 @@
   }
 }
 
-@keyframes vt-cross-fade {
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
   from {
     opacity: 0;
   }
+}
+
+@keyframes vt-slide-out-left {
   to {
-    opacity: 1;
+    transform: translateX(-18%) scale(0.985);
+    opacity: 0;
   }
 }
 
-@keyframes vt-wipe-out-left {
+@keyframes vt-slide-in-right {
   from {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-  }
-  to {
-    clip-path: inset(0 100% 0 0);
-    opacity: 0.96;
+    transform: translateX(18%) scale(0.985);
+    opacity: 0;
   }
 }
 
-@keyframes vt-wipe-in-right {
-  from {
-    clip-path: inset(0 0 0 100%);
-    opacity: 0.96;
-  }
+@keyframes vt-slide-out-right {
   to {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
+    transform: translateX(18%) scale(0.985);
+    opacity: 0;
   }
 }
 
-@keyframes vt-wipe-out-right {
+@keyframes vt-slide-in-left {
   from {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-  }
-  to {
-    clip-path: inset(0 0 0 100%);
-    opacity: 0.96;
+    transform: translateX(-18%) scale(0.985);
+    opacity: 0;
   }
 }
 
-@keyframes vt-wipe-in-left {
+@keyframes vt-finish-out {
   from {
-    clip-path: inset(0 100% 0 0);
-    opacity: 0.96;
+    clip-path: circle(160% at 50% 88%);
+    opacity: 1;
+    transform: scale(1);
   }
   to {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
+    clip-path: circle(0% at 50% 88%);
+    opacity: 0.9;
+    transform: scale(0.98);
   }
 }
 
-@keyframes vt-circle-out {
+@keyframes vt-finish-in {
   from {
-    clip-path: circle(150% at 50% 50%);
-    opacity: 1;
+    clip-path: circle(0% at 50% 88%);
+    opacity: 0.9;
+    transform: scale(1.02);
   }
   to {
-    clip-path: circle(0% at 50% 50%);
-    opacity: 0.85;
+    clip-path: circle(160% at 50% 88%);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@keyframes vt-circle-in {
-  from {
-    clip-path: circle(0% at 50% 50%);
-    opacity: 0.85;
-  }
+@keyframes vt-card-out {
   to {
-    clip-path: circle(150% at 50% 50%);
-    opacity: 1;
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes vt-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
   }
 }

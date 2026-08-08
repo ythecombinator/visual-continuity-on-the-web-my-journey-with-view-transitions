@@ -73,6 +73,7 @@ export function collectAnsweredQuestions(answers: SurveyAnswers) {
 export function getProgressPercent(phase: "welcome" | "step" | "done", stepIndex: number) {
   const total = surveySteps.length;
   if (phase === "done") return 100;
-  if (phase === "welcome") return 0;
+  // Seed a short fill on welcome so the shared-element morph is visible on Start.
+  if (phase === "welcome") return 8;
   return Math.round(((stepIndex + 1) / (total + 1)) * 100);
 }

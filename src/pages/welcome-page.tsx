@@ -21,7 +21,9 @@ export function WelcomePage() {
         }
       >
         <section className="flex min-h-[70vh] flex-col justify-center gap-5 py-6">
-          <p className="text-sm font-medium text-primary">{surveyMeta.brand}</p>
+          <p className="vt-survey-brand text-sm font-medium text-primary">
+            {surveyMeta.brand}
+          </p>
           <h1
             id="page-heading"
             tabIndex={-1}

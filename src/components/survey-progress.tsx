@@ -18,7 +18,7 @@ export function SurveyProgress({ currentIndex, phase }: SurveyProgressProps) {
       aria-label={`${percent}% complete`}
     >
       <div
-        className="vt-survey-progress-fill h-full bg-primary"
+        className="vt-survey-progress-fill h-full min-w-2 rounded-full bg-primary"
         style={{ width: `${percent}%` }}
       />
     </div>
