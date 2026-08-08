@@ -1,10 +1,10 @@
 import type { Question } from "@/data/survey";
 import type { AnswerValue } from "@/shared/survey-answers";
-import { CheckboxQuestion } from "@/components/questions/CheckboxQuestion";
-import { ComboboxQuestion } from "@/components/questions/ComboboxQuestion";
-import { RadioQuestion } from "@/components/questions/RadioQuestion";
-import { SelectQuestion } from "@/components/questions/SelectQuestion";
-import { TextQuestion } from "@/components/questions/TextQuestion";
+import { CheckboxQuestion } from "@/components/questions/checkbox-question";
+import { ComboboxQuestion } from "@/components/questions/combobox-question";
+import { RadioQuestion } from "@/components/questions/radio-question";
+import { SelectQuestion } from "@/components/questions/select-question";
+import { TextQuestion } from "@/components/questions/text-question";
 
 interface QuestionRendererProps {
   question: Question;

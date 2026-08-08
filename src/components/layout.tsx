@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { SurveyProgress } from "@/components/SurveyProgress";
+import { SurveyProgress } from "@/components/survey-progress";
 
 interface LayoutProps {
   children: ReactNode;

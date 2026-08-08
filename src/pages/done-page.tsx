@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Layout } from "@/components/Layout";
-import { SurveyNav } from "@/components/SurveyNav";
+import { Layout } from "@/components/layout";
+import { SurveyNav } from "@/components/survey-nav";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { surveySteps } from "@/data/survey";
 import { cn } from "@/lib/utils";

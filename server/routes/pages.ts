@@ -2,9 +2,9 @@ import type { FastifyInstance } from "fastify";
 import type { ComponentType } from "react";
 import { getStepBySlug } from "../../src/data/survey.js";
 import { renderPage } from "../../src/server/render.js";
-import { WelcomePage } from "../../src/pages/WelcomePage.js";
-import { StepPage } from "../../src/pages/StepPage.js";
-import { DonePage } from "../../src/pages/DonePage.js";
+import { WelcomePage } from "../../src/pages/welcome-page.js";
+import { StepPage } from "../../src/pages/step-page.js";
+import { DonePage } from "../../src/pages/done-page.js";
 
 interface PageRouteContext {
   dev: boolean;

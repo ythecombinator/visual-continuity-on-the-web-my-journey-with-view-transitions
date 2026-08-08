@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "@tanstack/react-form";
-import { Layout } from "@/components/Layout";
-import { QuestionRenderer } from "@/components/QuestionRenderer";
-import { SurveyNav, type SurveyNavIntent } from "@/components/SurveyNav";
+import { Layout } from "@/components/layout";
+import { QuestionRenderer } from "@/components/question-renderer";
+import { SurveyNav, type SurveyNavIntent } from "@/components/survey-nav";
 import {
   getAdjacentSteps,
   questionTransitionName,

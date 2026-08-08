@@ -1,5 +1,5 @@
 import { hydrateRoot } from "react-dom/client";
-import { StepPage } from "@/pages/StepPage";
+import { StepPage } from "@/pages/step-page";
 import type { StepPageData } from "@/types/page-data";
 import "@/styles/global.css";
 

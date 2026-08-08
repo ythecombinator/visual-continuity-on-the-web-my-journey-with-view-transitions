@@ -1,5 +1,5 @@
-import { Layout } from "@/components/Layout";
-import { SurveyNav } from "@/components/SurveyNav";
+import { Layout } from "@/components/layout";
+import { SurveyNav } from "@/components/survey-nav";
 import { surveyMeta, surveySteps } from "@/data/survey";
 
 const START_HREF = `/steps/${surveySteps[0].slug}`;
