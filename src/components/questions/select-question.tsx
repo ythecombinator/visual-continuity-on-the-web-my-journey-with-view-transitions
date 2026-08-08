@@ -1,5 +1,12 @@
 import type { Question } from "@/data/survey";
-import { cn } from "@/lib/utils";
+import { QuestionShell } from "@/components/questions/question-shell";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SelectQuestionProps {
   question: Question;
@@ -18,14 +25,14 @@ export function SelectQuestion({
   onBlur,
   transitionName,
 }: SelectQuestionProps) {
+  const options = question.options ?? [];
+  const items = options.map((option) => ({
+    value: option.value,
+    label: option.label,
+  }));
+
   return (
-    <div
-      className={cn(
-        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
-        error && "border-destructive/50 ring-2 ring-destructive/15",
-      )}
-      style={transitionName ? { viewTransitionName: transitionName } : undefined}
-    >
+    <QuestionShell error={error} transitionName={transitionName}>
       <div className="mb-4 space-y-1.5">
         <label
           htmlFor={question.id}
@@ -40,25 +47,29 @@ export function SelectQuestion({
         ) : null}
       </div>
 
-      <select
-        id={question.id}
+      <Select
         name={question.id}
-        className="flex h-11 w-full rounded-xl border border-input bg-background/80 px-3.5 text-[0.95rem] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        value={value}
-        onBlur={onBlur}
-        onChange={(event) => onChange(event.target.value)}
+        value={value || null}
+        items={items}
+        onValueChange={(next) => {
+          if (typeof next === "string") onChange(next);
+        }}
       >
-        <option value="" disabled>
-          Select an option…
-        </option>
-        {question.options?.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-
-      {error ? <p className="mt-3 text-sm font-medium text-destructive">{error}</p> : null}
-    </div>
+        <SelectTrigger
+          id={question.id}
+          aria-invalid={Boolean(error) || undefined}
+          onBlur={onBlur}
+        >
+          <SelectValue placeholder="Select an option…" />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </QuestionShell>
   );
 }

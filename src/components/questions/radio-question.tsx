@@ -1,4 +1,6 @@
 import type { Question } from "@/data/survey";
+import { QuestionShell } from "@/components/questions/question-shell";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
 interface RadioQuestionProps {
@@ -21,16 +23,17 @@ export function RadioQuestion({
   const titleId = `${question.id}-title`;
 
   return (
-    <fieldset
-      className={cn(
-        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
-        error && "border-destructive/50 ring-2 ring-destructive/15",
-      )}
-      style={transitionName ? { viewTransitionName: transitionName } : undefined}
-      aria-labelledby={titleId}
+    <QuestionShell
+      as="fieldset"
+      labelledBy={titleId}
+      error={error}
+      transitionName={transitionName}
     >
       <div className="mb-4 space-y-1.5">
-        <p id={titleId} className="text-lg font-semibold tracking-tight text-foreground">
+        <p
+          id={titleId}
+          className="text-lg font-semibold tracking-tight text-foreground"
+        >
           {question.label}
         </p>
         {question.description ? (
@@ -40,7 +43,15 @@ export function RadioQuestion({
         ) : null}
       </div>
 
-      <div className="grid gap-2">
+      <RadioGroup
+        name={question.id}
+        value={value || undefined}
+        aria-invalid={Boolean(error) || undefined}
+        onValueChange={(next) => {
+          if (typeof next === "string") onChange(next);
+        }}
+        onBlur={onBlur}
+      >
         {question.options?.map((option) => {
           const selected = value === option.value;
           const id = `${question.id}-${option.value}`;
@@ -55,23 +66,12 @@ export function RadioQuestion({
                   : "border-border/80 bg-background/60 hover:border-primary/40 hover:bg-secondary/50",
               )}
             >
-              <input
-                id={id}
-                type="radio"
-                name={question.id}
-                value={option.value}
-                checked={selected}
-                className="mt-1 size-4 accent-[var(--color-primary)]"
-                onBlur={onBlur}
-                onChange={() => onChange(option.value)}
-              />
-              <span className="text-[0.95rem] leading-snug">{option.label}</span>
+              <RadioGroupItem id={id} value={option.value} />
+              <span className="text-base leading-snug">{option.label}</span>
             </label>
           );
         })}
-      </div>
-
-      {error ? <p className="mt-3 text-sm font-medium text-destructive">{error}</p> : null}
-    </fieldset>
+      </RadioGroup>
+    </QuestionShell>
   );
 }

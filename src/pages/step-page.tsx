@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "@tanstack/react-form";
 import { Layout } from "@/components/layout";
 import { QuestionRenderer } from "@/components/question-renderer";
@@ -9,7 +9,6 @@ import {
   type SurveyStep,
 } from "@/data/survey";
 import { fieldErrorMessage } from "@/shared/form-errors";
-import { valuesFromFormElement } from "@/shared/form-data";
 import { buildStepSchema, type StepFormValues } from "@/shared/survey-schema";
 import {
   emptyStepValues,
@@ -26,7 +25,6 @@ interface StepPageProps {
 }
 
 export function StepPage({ step }: StepPageProps) {
-  const pendingValuesRef = useRef<StepFormValues | null>(null);
   const { prevHref, nextHref, isLast, index } = getAdjacentSteps(step.slug);
   const backHref = prevHref ?? "/";
   const schema = useMemo(() => buildStepSchema(step), [step]);
@@ -49,10 +47,9 @@ export function StepPage({ step }: StepPageProps) {
         return { fields: fieldErrors };
       },
     },
-    onSubmit: async () => {
-      const values = pendingValuesRef.current ?? form.state.values;
+    onSubmit: async ({ value }) => {
       const finishing = isLast;
-      const result = persistSurveyAnswers(values, {
+      const result = persistSurveyAnswers(value, {
         submitted: finishing,
       });
 
@@ -72,14 +69,6 @@ export function StepPage({ step }: StepPageProps) {
     }
   }, [step, form]);
 
-  function readLiveValues(): StepFormValues {
-    const formEl = document.getElementById(FORM_ID);
-    if (!(formEl instanceof HTMLFormElement)) {
-      return form.state.values;
-    }
-    return valuesFromFormElement(formEl, step);
-  }
-
   return (
     <form
       id={FORM_ID}
@@ -98,12 +87,6 @@ export function StepPage({ step }: StepPageProps) {
           return;
         }
 
-        const values = readLiveValues();
-        pendingValuesRef.current = values;
-        for (const [key, value] of Object.entries(values)) {
-          form.setFieldValue(key, value);
-        }
-
         void form.handleSubmit();
       }}
     >
@@ -118,8 +101,7 @@ export function StepPage({ step }: StepPageProps) {
             backLabel="Back"
             backHref={backHref}
             onBack={(href) => {
-              const values = readLiveValues();
-              const result = persistSurveyAnswers(values);
+              const result = persistSurveyAnswers(form.state.values);
               if (!result.ok) {
                 window.alert(result.error);
                 return;
