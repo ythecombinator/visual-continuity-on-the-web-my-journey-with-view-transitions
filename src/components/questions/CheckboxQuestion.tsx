@@ -1,5 +1,3 @@
-"use client";
-
 import type { Question } from "@/data/survey";
 import { cn } from "@/lib/utils";
 import { runViewTransition } from "@/shared/view-transition";

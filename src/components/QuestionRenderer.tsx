@@ -1,5 +1,3 @@
-"use client";
-
 import type { Question } from "@/data/survey";
 import type { AnswerValue } from "@/shared/survey-answers";
 import { CheckboxQuestion } from "@/components/questions/CheckboxQuestion";

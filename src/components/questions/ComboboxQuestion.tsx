@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useMemo, useState } from "react";
 import type { Question } from "@/data/survey";
 import { cn } from "@/lib/utils";

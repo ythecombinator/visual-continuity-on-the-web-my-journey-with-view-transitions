@@ -1,5 +1,5 @@
 import { hydrateRoot } from "react-dom/client";
-import { WelcomePage } from "@/pages/WelcomePage.server";
+import { WelcomePage } from "@/pages/WelcomePage";
 import "@/styles/global.css";
 
 const root = document.getElementById("root");
