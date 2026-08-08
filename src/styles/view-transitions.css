@@ -43,10 +43,14 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Soft iOS-like deceleration across chrome and page layers. */
+  ::view-transition-group(*) {
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
   /* Layering: chrome and progress stay above the root page motion. */
   ::view-transition-group(*.survey-chrome) {
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-duration: 0.52s;
     z-index: 20;
   }
 
@@ -63,8 +67,8 @@
 
   /* Progress fill: the signature shared-element morph. */
   ::view-transition-group(*.survey-progress-fill) {
-    animation-duration: 0.55s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-duration: 0.68s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     z-index: 30;
   }
 
@@ -84,8 +88,7 @@
 
   /* Title: group morphs box; bitmaps soft-crossfade so changing copy stays clean. */
   ::view-transition-group(*.survey-title) {
-    animation-duration: 0.48s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-duration: 0.58s;
     z-index: 15;
   }
 
@@ -93,19 +96,18 @@
     object-fit: cover;
     overflow: clip;
     mix-blend-mode: plus-lighter;
-    animation: vt-fade-out 0.22s ease both;
+    animation: vt-fade-out 0.28s ease both;
   }
 
   ::view-transition-new(*.survey-title) {
     object-fit: cover;
     overflow: clip;
     mix-blend-mode: plus-lighter;
-    animation: vt-fade-in 0.32s ease 0.08s both;
+    animation: vt-fade-in 0.4s ease 0.06s both;
   }
 
   ::view-transition-group(*.survey-brand) {
-    animation-duration: 0.4s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-duration: 0.52s;
     z-index: 14;
   }
 
@@ -119,27 +121,26 @@
 
   /* Question cards: short enter/exit so they don't fight the root motion. */
   ::view-transition-group(*.survey-question) {
-    animation-duration: 0.28s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-duration: 0.36s;
   }
 
   ::view-transition-old(*.survey-question) {
     object-fit: cover;
     overflow: clip;
-    animation: vt-card-out 0.22s ease both;
+    animation: vt-card-out 0.28s ease both;
   }
 
   ::view-transition-new(*.survey-question) {
     object-fit: cover;
     overflow: clip;
-    animation: vt-card-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+    animation: vt-card-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
   }
 
   /* Root page motion (typed). Shared names stay above this. */
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.42s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-duration: 0.55s;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   html:active-view-transition-type(forwards)::view-transition-old(root) {
@@ -160,24 +161,24 @@
 
   html:active-view-transition-type(finish)::view-transition-old(root) {
     animation-name: vt-finish-out;
-    animation-duration: 0.4s;
+    animation-duration: 0.48s;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   html:active-view-transition-type(finish)::view-transition-new(root) {
     animation-name: vt-finish-in;
-    animation-duration: 0.55s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-duration: 0.68s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   html:active-view-transition-type(reload)::view-transition-old(root) {
     animation-name: vt-fade-out;
-    animation-duration: 0.2s;
+    animation-duration: 0.24s;
   }
 
   html:active-view-transition-type(reload)::view-transition-new(root) {
     animation-name: vt-fade-in;
-    animation-duration: 0.25s;
+    animation-duration: 0.32s;
   }
 }
 
@@ -204,28 +205,28 @@
 
 @keyframes vt-slide-out-left {
   to {
-    transform: translateX(-18%) scale(0.985);
+    transform: translateX(-8%);
     opacity: 0;
   }
 }
 
 @keyframes vt-slide-in-right {
   from {
-    transform: translateX(18%) scale(0.985);
+    transform: translateX(8%);
     opacity: 0;
   }
 }
 
 @keyframes vt-slide-out-right {
   to {
-    transform: translateX(18%) scale(0.985);
+    transform: translateX(8%);
     opacity: 0;
   }
 }
 
 @keyframes vt-slide-in-left {
   from {
-    transform: translateX(-18%) scale(0.985);
+    transform: translateX(-8%);
     opacity: 0;
   }
 }
@@ -234,38 +235,34 @@
   from {
     clip-path: circle(160% at 50% 88%);
     opacity: 1;
-    transform: scale(1);
   }
   to {
     clip-path: circle(0% at 50% 88%);
-    opacity: 0.9;
-    transform: scale(0.98);
+    opacity: 0.96;
   }
 }
 
 @keyframes vt-finish-in {
   from {
     clip-path: circle(0% at 50% 88%);
-    opacity: 0.9;
-    transform: scale(1.02);
+    opacity: 0.96;
   }
   to {
     clip-path: circle(160% at 50% 88%);
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 @keyframes vt-card-out {
   to {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    transform: translateY(6px);
   }
 }
 
 @keyframes vt-card-in {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(10px);
   }
 }
