@@ -51,6 +51,7 @@ export function ComboboxQuestion({
     <div
       className={cn(
         "rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
+        open && "relative z-50",
         error && "border-destructive/50 ring-2 ring-destructive/15",
       )}
       style={transitionName ? { viewTransitionName: transitionName } : undefined}
@@ -96,11 +97,11 @@ export function ComboboxQuestion({
           <ul
             id={listId}
             role="listbox"
-            className="absolute z-20 mt-2 max-h-56 w-full overflow-auto rounded-xl border border-border bg-popover p-1 shadow-lg"
+            className="absolute inset-x-0 top-full z-50 mt-2 max-h-56 overflow-auto rounded-xl border border-border bg-popover p-1 shadow-lg"
           >
             {filtered.length === 0 ? (
               <li className="px-3 py-2 text-sm text-muted-foreground">
-                No matches — your text will be saved.
+                No matches. Your text will be saved.
               </li>
             ) : (
               filtered.map((option) => (
