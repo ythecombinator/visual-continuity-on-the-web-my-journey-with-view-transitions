@@ -2,7 +2,7 @@ import type { SurveyStep } from "@/data/survey";
 import type { StepFormValues } from "@/shared/survey-schema";
 import { emptyStepValues } from "@/shared/survey-storage";
 
-/** Read the live DOM form — source of truth at submit time. */
+/** Read the live DOM form (source of truth at submit time). */
 export function valuesFromFormElement(
   form: HTMLFormElement,
   step: SurveyStep,

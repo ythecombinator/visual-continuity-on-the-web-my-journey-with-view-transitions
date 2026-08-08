@@ -51,7 +51,7 @@ export function persistSurveyAnswers(
     if (verified !== serialized) {
       return {
         ok: false,
-        error: "Save verification failed — answers were not written to localStorage.",
+        error: "Save verification failed. Answers were not written to localStorage.",
       };
     }
 

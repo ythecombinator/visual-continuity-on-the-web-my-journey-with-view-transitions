@@ -38,7 +38,7 @@ export const surveySteps: SurveyStep[] = [
   {
     slug: "pulse",
     title: "First impressions",
-    description: "A quick pulse check on the session — each step is a real page load.",
+    description: "A quick pulse check on the session. Each step is a real page load.",
     questions: [
       {
         id: "overall",
@@ -47,11 +47,11 @@ export const surveySteps: SurveyStep[] = [
         description: "Think about pacing, clarity, and whether the demos landed.",
         required: true,
         options: [
-          { value: "5", label: "Excellent — I want the slides" },
-          { value: "4", label: "Great — a few aha moments" },
-          { value: "3", label: "Solid — useful takeaways" },
-          { value: "2", label: "Mixed — some parts clicked" },
-          { value: "1", label: "Rough — hard to follow" },
+          { value: "5", label: "Excellent. I want the slides." },
+          { value: "4", label: "Great. A few aha moments." },
+          { value: "3", label: "Solid. Useful takeaways." },
+          { value: "2", label: "Mixed. Some parts clicked." },
+          { value: "1", label: "Rough. Hard to follow." },
         ],
       },
       {
@@ -70,7 +70,7 @@ export const surveySteps: SurveyStep[] = [
   {
     slug: "sessions",
     title: "What resonated",
-    description: "Tell us which ideas stuck — multiple inputs on one document.",
+    description: "Tell us which ideas stuck. Multiple inputs on one document.",
     questions: [
       {
         id: "format",
@@ -112,7 +112,7 @@ export const surveySteps: SurveyStep[] = [
   {
     slug: "venue",
     title: "Around the session",
-    description: "Discovery, logistics, and an open channel — still pure MPA routes.",
+    description: "Discovery, logistics, and an open channel. Still pure MPA routes.",
     questions: [
       {
         id: "highlights",
@@ -146,7 +146,7 @@ export const surveySteps: SurveyStep[] = [
         id: "notes",
         type: "textarea",
         label: "Anything else we should know?",
-        placeholder: "Open feedback — bugs, wishes, shout-outs…",
+        placeholder: "Bugs, wishes, shout-outs…",
       },
     ],
   },

@@ -40,7 +40,7 @@ export function getAnswerLabel(
   value: AnswerValue | undefined,
 ): string {
   if (value == null || (Array.isArray(value) && value.length === 0)) {
-    return "—";
+    return "None";
   }
 
   if (question.type === "checkbox" && Array.isArray(value)) {

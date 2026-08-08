@@ -33,6 +33,10 @@ export function WelcomePage() {
             A short multi-page survey for{" "}
             <span className="font-medium text-foreground">{surveyMeta.talkTitle}</span>.
           </p>
+          <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
+            Your answers stay in this browser only (localStorage). Nothing is
+            sent to a server.
+          </p>
         </section>
       </Layout>
     </div>

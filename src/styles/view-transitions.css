@@ -1,4 +1,4 @@
-/* Source of truth — also inlined into the HTML shell via render.tsx
+/* Source of truth; also inlined into the HTML shell via render.tsx
    so Tailwind never rewrites the @view-transition at-rule. */
 
 /* Keep the opt-in even under reduced motion so pagereveal still sees a
@@ -81,7 +81,7 @@
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Forward steps — wipe / soft slide from the right. */
+  /* Forward steps: wipe / soft slide from the right. */
   html:active-view-transition-type(forwards)::view-transition-old(root) {
     animation-name: vt-wipe-out-left;
   }
@@ -90,7 +90,7 @@
     animation-name: vt-wipe-in-right;
   }
 
-  /* Back steps — mirrored wipe. */
+  /* Back steps: mirrored wipe. */
   html:active-view-transition-type(backwards)::view-transition-old(root) {
     animation-name: vt-wipe-out-right;
   }
@@ -99,7 +99,7 @@
     animation-name: vt-wipe-in-left;
   }
 
-  /* Finish ceremony — circle reveal into /done. */
+  /* Finish ceremony: circle reveal into /done. */
   html:active-view-transition-type(finish)::view-transition-old(root) {
     animation-name: vt-circle-out;
     animation-duration: 0.45s;
@@ -112,7 +112,7 @@
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Reload — quiet cross-fade. */
+  /* Reload: quiet cross-fade. */
   html:active-view-transition-type(reload)::view-transition-old(root),
   html:active-view-transition-type(reload)::view-transition-new(root) {
     animation-name: vt-cross-fade;
