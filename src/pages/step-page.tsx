@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "@tanstack/react-form";
 import { Layout } from "@/components/layout";
 import { QuestionRenderer } from "@/components/question-renderer";
-import { SurveyNav, type SurveyNavIntent } from "@/components/survey-nav";
+import { SurveyNav } from "@/components/survey-nav";
 import {
   getAdjacentSteps,
   questionTransitionName,
@@ -27,11 +27,10 @@ interface StepPageProps {
 }
 
 export function StepPage({ step }: StepPageProps) {
-  const intentRef = useRef<SurveyNavIntent>("next");
   const pendingValuesRef = useRef<StepFormValues | null>(null);
   const { prevHref, nextHref, isLast, index } = getAdjacentSteps(step.slug);
+  const backHref = prevHref ?? "/";
   const schema = useMemo(() => buildStepSchema(step), [step]);
-  // SSR-safe empty defaults so the form renders immediately (no loading gate).
   const defaultValues = useMemo(() => emptyStepValues(step), [step]);
 
   const form = useForm({
@@ -52,10 +51,10 @@ export function StepPage({ step }: StepPageProps) {
       },
     },
     onSubmit: async () => {
-      const intent = intentRef.current;
       const values = pendingValuesRef.current ?? form.state.values;
+      const finishing = isLast;
       const result = persistSurveyAnswers(values, {
-        submitted: intent === "finish",
+        submitted: finishing,
       });
 
       if (!result.ok) {
@@ -63,7 +62,7 @@ export function StepPage({ step }: StepPageProps) {
         return;
       }
 
-      navigateAfterPersist(intent === "finish" ? "/done" : (nextHref ?? "/done"));
+      navigateAfterPersist(finishing ? "/done" : (nextHref ?? "/done"));
     },
   });
 
@@ -73,6 +72,14 @@ export function StepPage({ step }: StepPageProps) {
       form.setFieldValue(key, value);
     }
   }, [step, form]);
+
+  function readLiveValues(): StepFormValues {
+    const formEl = document.getElementById(FORM_ID);
+    if (!(formEl instanceof HTMLFormElement)) {
+      return form.state.values;
+    }
+    return valuesFromFormElement(formEl, step);
+  }
 
   return (
     <form
@@ -86,23 +93,16 @@ export function StepPage({ step }: StepPageProps) {
 
         const submitter = (event.nativeEvent as SubmitEvent)
           .submitter as HTMLButtonElement | null;
-        const intent = (submitter?.value as SurveyNavIntent | undefined) ?? "next";
-        intentRef.current = intent;
+        const intent = submitter?.value;
+        // Only Next / Finish submit this form. Back is a real link.
+        if (intent !== "next" && intent !== "finish") {
+          return;
+        }
 
-        const values = valuesFromFormElement(event.currentTarget, step);
+        const values = readLiveValues();
         pendingValuesRef.current = values;
         for (const [key, value] of Object.entries(values)) {
           form.setFieldValue(key, value);
-        }
-
-        if (intent === "back") {
-          const result = persistSurveyAnswers(values);
-          if (!result.ok) {
-            window.alert(result.error);
-            return;
-          }
-          navigateAfterPersist(prevHref ?? "/");
-          return;
         }
 
         void form.handleSubmit();
@@ -117,9 +117,20 @@ export function StepPage({ step }: StepPageProps) {
             formId={FORM_ID}
             showBack
             backLabel="Back"
+            backHref={backHref}
+            onBack={(href) => {
+              const values = readLiveValues();
+              const result = persistSurveyAnswers(values);
+              if (!result.ok) {
+                window.alert(result.error);
+                return;
+              }
+              navigateAfterPersist(href);
+            }}
             showForward
             showFinish={isLast}
             forwardLabel="Next"
+            forwardIntent="next"
           />
         }
       >
