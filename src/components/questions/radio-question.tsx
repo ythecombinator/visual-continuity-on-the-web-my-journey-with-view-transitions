@@ -1,5 +1,6 @@
 import type { Question } from "@/data/survey";
 import { QuestionShell } from "@/components/questions/question-shell";
+import { QuestionTitle } from "@/components/questions/question-title";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
@@ -30,12 +31,9 @@ export function RadioQuestion({
       transitionName={transitionName}
     >
       <div className="mb-4 space-y-1.5">
-        <p
-          id={titleId}
-          className="text-lg font-semibold tracking-tight text-foreground"
-        >
+        <QuestionTitle id={titleId} required={question.required}>
           {question.label}
-        </p>
+        </QuestionTitle>
         {question.description ? (
           <p className="text-sm leading-relaxed text-muted-foreground">
             {question.description}
@@ -46,6 +44,7 @@ export function RadioQuestion({
       <RadioGroup
         name={question.id}
         value={value || undefined}
+        required={question.required}
         aria-invalid={Boolean(error) || undefined}
         onValueChange={(next) => {
           if (typeof next === "string") onChange(next);

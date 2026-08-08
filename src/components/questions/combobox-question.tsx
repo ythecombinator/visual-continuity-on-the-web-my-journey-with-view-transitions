@@ -1,5 +1,6 @@
 import type { Question } from "@/data/survey";
 import { QuestionShell } from "@/components/questions/question-shell";
+import { QuestionTitle } from "@/components/questions/question-title";
 import {
   Combobox,
   ComboboxContent,
@@ -35,12 +36,9 @@ export function ComboboxQuestion({
   return (
     <QuestionShell error={error} transitionName={transitionName}>
       <div className="mb-4 space-y-1.5">
-        <label
-          htmlFor={question.id}
-          className="block text-lg font-semibold tracking-tight text-foreground"
-        >
+        <QuestionTitle htmlFor={question.id} required={question.required}>
           {question.label}
-        </label>
+        </QuestionTitle>
         {question.description ? (
           <p className="text-sm leading-relaxed text-muted-foreground">
             {question.description}
@@ -53,6 +51,7 @@ export function ComboboxQuestion({
         items={labels}
         value={selected}
         inputValue={value}
+        required={question.required}
         onInputValueChange={(next) => onChange(next)}
         onValueChange={(next) => {
           if (typeof next === "string") onChange(next);

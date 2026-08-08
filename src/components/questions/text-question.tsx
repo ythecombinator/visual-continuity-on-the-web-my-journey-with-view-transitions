@@ -1,5 +1,6 @@
 import type { Question } from "@/data/survey";
 import { QuestionShell } from "@/components/questions/question-shell";
+import { QuestionTitle } from "@/components/questions/question-title";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -25,12 +26,9 @@ export function TextQuestion({
   return (
     <QuestionShell error={error} transitionName={transitionName}>
       <div className="mb-4 space-y-1.5">
-        <label
-          htmlFor={question.id}
-          className="block text-lg font-semibold tracking-tight text-foreground"
-        >
+        <QuestionTitle htmlFor={question.id} required={question.required}>
           {question.label}
-        </label>
+        </QuestionTitle>
         {question.description ? (
           <p className="text-sm leading-relaxed text-muted-foreground">
             {question.description}
@@ -44,6 +42,7 @@ export function TextQuestion({
           name={question.id}
           placeholder={question.placeholder}
           value={value}
+          required={question.required}
           aria-invalid={Boolean(error) || undefined}
           onBlur={onBlur}
           onChange={(event) => onChange(event.target.value)}
@@ -55,6 +54,7 @@ export function TextQuestion({
           type="text"
           placeholder={question.placeholder}
           value={value}
+          required={question.required}
           aria-invalid={Boolean(error) || undefined}
           onBlur={onBlur}
           onChange={(event) => onChange(event.target.value)}
