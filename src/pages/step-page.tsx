@@ -18,7 +18,6 @@ import {
   persistSurveyAnswers,
 } from "@/shared/survey-storage";
 import type { AnswerValue } from "@/shared/survey-answers";
-import { runViewTransition } from "@/shared/view-transition";
 
 const FORM_ID = "survey-step-form";
 
@@ -135,8 +134,8 @@ export function StepPage({ step }: StepPageProps) {
         }
       >
         <header className="mb-8 space-y-2">
-          <p className="text-sm font-medium text-muted-foreground">
-            Step {index + 1}
+          <p className="vt-survey-brand text-sm font-medium text-primary">
+            {`Step ${index + 1}`}
           </p>
           <h1
             id="page-heading"
@@ -164,11 +163,7 @@ export function StepPage({ step }: StepPageProps) {
                     error={error}
                     transitionName={questionTransitionName(question.id)}
                     onBlur={field.handleBlur}
-                    onChange={(value) => {
-                      runViewTransition(() => {
-                        field.handleChange(value);
-                      });
-                    }}
+                    onChange={field.handleChange}
                   />
                 );
               }}

@@ -1,6 +1,5 @@
 import type { Question } from "@/data/survey";
 import { cn } from "@/lib/utils";
-import { runViewTransition } from "@/shared/view-transition";
 
 interface CheckboxQuestionProps {
   question: Question;
@@ -22,16 +21,14 @@ export function CheckboxQuestion({
   const titleId = `${question.id}-title`;
 
   const toggle = (optionValue: string, checked: boolean) => {
-    runViewTransition(() => {
-      if (checked) onChange([...value, optionValue]);
-      else onChange(value.filter((item) => item !== optionValue));
-    });
+    if (checked) onChange([...value, optionValue]);
+    else onChange(value.filter((item) => item !== optionValue));
   };
 
   return (
     <fieldset
       className={cn(
-        "rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
+        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
         error && "border-destructive/50 ring-2 ring-destructive/15",
       )}
       style={transitionName ? { viewTransitionName: transitionName } : undefined}

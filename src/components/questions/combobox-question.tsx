@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Question } from "@/data/survey";
 import { cn } from "@/lib/utils";
-import { runViewTransition } from "@/shared/view-transition";
 
 interface ComboboxQuestionProps {
   question: Question;
@@ -40,17 +39,15 @@ export function ComboboxQuestion({
   }, [question.options, query]);
 
   const commit = (next: string) => {
-    runViewTransition(() => {
-      setQuery(next);
-      onChange(next);
-      setOpen(false);
-    });
+    setQuery(next);
+    onChange(next);
+    setOpen(false);
   };
 
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
+        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
         open && "relative z-50",
         error && "border-destructive/50 ring-2 ring-destructive/15",
       )}

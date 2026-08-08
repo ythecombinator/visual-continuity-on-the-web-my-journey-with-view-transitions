@@ -1,6 +1,5 @@
 import type { Question } from "@/data/survey";
 import { cn } from "@/lib/utils";
-import { runViewTransition } from "@/shared/view-transition";
 
 interface SelectQuestionProps {
   question: Question;
@@ -22,7 +21,7 @@ export function SelectQuestion({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
+        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
         error && "border-destructive/50 ring-2 ring-destructive/15",
       )}
       style={transitionName ? { viewTransitionName: transitionName } : undefined}
@@ -47,10 +46,7 @@ export function SelectQuestion({
         className="flex h-11 w-full rounded-xl border border-input bg-background/80 px-3.5 text-[0.95rem] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         value={value}
         onBlur={onBlur}
-        onChange={(event) => {
-          const next = event.target.value;
-          runViewTransition(() => onChange(next));
-        }}
+        onChange={(event) => onChange(event.target.value)}
       >
         <option value="" disabled>
           Select an option…

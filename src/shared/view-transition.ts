@@ -39,25 +39,6 @@ export function determineTransitionType(
   return to > from ? "forwards" : "backwards";
 }
 
-export function viewTransitionSupported(): boolean {
-  return (
-    typeof document !== "undefined" &&
-    "startViewTransition" in document &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-export function runViewTransition(update: () => void | Promise<void>): void {
-  if (!viewTransitionSupported()) {
-    void Promise.resolve(update());
-    return;
-  }
-
-  document.startViewTransition(async () => {
-    await update();
-  });
-}
-
 /**
  * Navigate with a real link activation so cross-document view transitions
  * still fire. `location.assign` is treated as script navigation and skips them.

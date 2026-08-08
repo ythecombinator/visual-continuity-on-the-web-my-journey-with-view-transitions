@@ -1,6 +1,5 @@
 import type { Question } from "@/data/survey";
 import { cn } from "@/lib/utils";
-import { runViewTransition } from "@/shared/view-transition";
 
 interface RadioQuestionProps {
   question: Question;
@@ -24,7 +23,7 @@ export function RadioQuestion({
   return (
     <fieldset
       className={cn(
-        "rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
+        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
         error && "border-destructive/50 ring-2 ring-destructive/15",
       )}
       style={transitionName ? { viewTransitionName: transitionName } : undefined}
@@ -64,7 +63,7 @@ export function RadioQuestion({
                 checked={selected}
                 className="mt-1 size-4 accent-[var(--color-primary)]"
                 onBlur={onBlur}
-                onChange={() => runViewTransition(() => onChange(option.value))}
+                onChange={() => onChange(option.value)}
               />
               <span className="text-[0.95rem] leading-snug">{option.label}</span>
             </label>

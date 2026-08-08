@@ -26,7 +26,7 @@ export function TextQuestion({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
+        "vt-survey-question rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur",
         error && "border-destructive/50 ring-2 ring-destructive/15",
       )}
       style={transitionName ? { viewTransitionName: transitionName } : undefined}
