@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: session-pulse
+    name: visual-continuity-on-the-web-my-journey-with-view-transitions-demo
     runtime: node
     plan: free
     buildCommand: npm install --include=dev && npm run build
