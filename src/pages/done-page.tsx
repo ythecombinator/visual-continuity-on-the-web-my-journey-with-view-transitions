@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/layout";
 import { SurveyNav } from "@/components/survey-nav";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { surveySteps } from "@/data/survey";
 import { cn } from "@/lib/utils";
 import {
@@ -14,14 +14,12 @@ import {
   persistSurveyAnswers,
   readSurveyState,
 } from "@/shared/survey-storage";
-import { runViewTransition } from "@/shared/view-transition";
 
 const FORM_ID = "survey-done-form";
 
 export function DonePage() {
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const [submitted, setSubmitted] = useState(false);
-  const [revealed, setRevealed] = useState(true);
   const summary = collectAnsweredQuestions(answers);
   const lastStep = surveySteps[surveySteps.length - 1];
 
@@ -88,14 +86,18 @@ export function DonePage() {
               Thanks for the signal
             </h1>
             <p className="max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Your answers stayed in localStorage across hard MPA documents.
+              Your answers stayed in this browser only (localStorage). Nothing
+              was sent to a server.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex w-full flex-col gap-3 sm:flex-row">
             <a
               href={lastStepHref}
-              className={cn(buttonVariants({ variant: "secondary" }))}
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "w-full sm:flex-1",
+              )}
             >
               Back to last step
             </a>
@@ -104,58 +106,47 @@ export function DonePage() {
               form={FORM_ID}
               name="intent"
               value="restart"
-              className={cn(buttonVariants())}
+              className={cn(buttonVariants(), "w-full sm:flex-1")}
             >
               Start over
             </button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() =>
-                runViewTransition(() => setRevealed((value) => !value))
-              }
-            >
-              {revealed ? "Hide summary" : "Show summary"}
-            </Button>
           </div>
         </section>
 
-        {revealed ? (
-          <section
-            className="mt-8 rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur"
-            aria-label="Answer summary"
-          >
-            <h2 className="mb-4 text-lg font-semibold tracking-tight">
-              What you shared
-            </h2>
-            {summary.length === 0 ? (
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                No answers yet — head back a step.
-              </p>
-            ) : (
-              <dl className="space-y-4">
-                {summary.map(({ question, display, stepTitle }) => (
-                  <div
-                    key={question.id}
-                    className="border-t border-border/70 pt-4 first:border-0 first:pt-0"
-                  >
-                    <dt className="space-y-1">
-                      <span className="block text-sm text-muted-foreground">
-                        {stepTitle}
-                      </span>
-                      <span className="text-base font-semibold text-foreground">
-                        {question.label}
-                      </span>
-                    </dt>
-                    <dd className="mt-1 text-base leading-relaxed text-muted-foreground">
-                      {display}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-          </section>
-        ) : null}
+        <section
+          className="mt-8 rounded-2xl border border-border/80 bg-card p-5 shadow-sm backdrop-blur"
+          aria-label="Answer summary"
+        >
+          <h2 className="mb-4 text-lg font-semibold tracking-tight">
+            What you shared
+          </h2>
+          {summary.length === 0 ? (
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              No answers yet. Head back a step.
+            </p>
+          ) : (
+            <dl className="space-y-4">
+              {summary.map(({ question, display, stepTitle }) => (
+                <div
+                  key={question.id}
+                  className="border-t border-border/70 pt-4 first:border-0 first:pt-0"
+                >
+                  <dt className="space-y-1">
+                    <span className="block text-sm text-muted-foreground">
+                      {stepTitle}
+                    </span>
+                    <span className="text-base font-semibold text-foreground">
+                      {question.label}
+                    </span>
+                  </dt>
+                  <dd className="mt-1 text-base leading-relaxed text-muted-foreground">
+                    {display}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </section>
       </Layout>
     </form>
   );
