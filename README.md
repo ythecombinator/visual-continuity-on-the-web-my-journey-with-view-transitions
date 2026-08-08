@@ -9,7 +9,7 @@ Answers stay in `localStorage` in this browser only. Nothing is posted to a serv
 ## Stack
 
 - Fastify server + Vite SSR/hydration entries per page
-- React 19, Tailwind CSS, TanStack Form + Zod
+- React 19, Tailwind CSS, shadcn-style UI on [Base UI](https://base-ui.com/), TanStack Form + Zod
 - Cross-document View Transitions (`@view-transition`, shared names/classes, transition types)
 
 ## Routes
