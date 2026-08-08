@@ -51,6 +51,13 @@
   a {
     @apply text-inherit no-underline;
   }
+
+  /* iOS Safari zooms focused fields under 16px; keep controls at text-base. */
+  input,
+  select,
+  textarea {
+    font-size: 1rem;
+  }
 }
 
 @layer utilities {
